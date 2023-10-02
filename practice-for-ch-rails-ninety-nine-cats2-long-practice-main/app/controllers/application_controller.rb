@@ -20,5 +20,13 @@ class ApplicationController < ActionController::Base
         # { session_token: "djh73y7eg32iuegi2u3dgi3ghe" }
     end
 
+    def require_logged_out
+        redirect_to cats_url if logged_in? 
+    end 
+
+    def require_logged_in 
+        redirect_to new_session_url unless logged_in?
+    end 
+
 
 end

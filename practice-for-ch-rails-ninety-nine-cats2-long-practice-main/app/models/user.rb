@@ -13,7 +13,7 @@ class User < ApplicationRecord
     def password=(password)
         @password = password 
 
-        password_digest = BCrypt::Password.create(password)
+        self.password_digest = BCrypt::Password.create(password)
     end 
 
     def is_password?(password) 
@@ -31,16 +31,28 @@ class User < ApplicationRecord
     end 
 
     def reset_session_token!
-        session_token = self.generate_unique_session_token
-        session_token.save! 
-        session_token 
+        self.session_token = self.generate_unique_session_token
+        self.save! 
+        self.session_token 
     end 
+
+
+    has_many :cats,
+        primary_key: :id, 
+        foreign_key: :owner_id,
+        class_name: :Cat, 
+        dependent: :destroy, 
+        inverse_of: :owner
+
+
+
 
     private 
 
     def generate_unique_session_token
         SecureRandom::urlsafe_base64
     end 
+
 
 
 
